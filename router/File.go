@@ -44,7 +44,16 @@ func upload(c *gin.Context) {
 	c.String(http.StatusOK, fmt.Sprintf("'%s' 上传成功!提取码:%s", file.Filename, code))
 }
 func download(c *gin.Context) {
-
+	code := c.Query("code")
+	file, err := model.GetFile(code)
+	if err != nil {
+		c.String(http.StatusOK, "提取码不存在!")
+	} else {
+		c.Header("Content-Type", "application/octet-stream")
+		c.Header("Content-Disposition", "attachment; filename="+file.FileName)
+		c.Header("Content-Transfer-Encoding", "binary")
+		c.File("./files/" + file.FileName)
+	}
 }
 
 func File(e *gin.Engine) {

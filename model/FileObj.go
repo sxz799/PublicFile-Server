@@ -32,7 +32,6 @@ func CodeExist(code string) bool {
 
 func CreateFile(fileName, fileCode, fileMd5 string, fileSize int64) {
 	fileObj := FileObj{
-
 		FileName:     fileName,
 		FileSize:     fileSize,
 		FileMd5:      fileMd5,
@@ -41,4 +40,9 @@ func CreateFile(fileName, fileCode, fileMd5 string, fileSize int64) {
 		FileLocation: "file/" + fileName,
 	}
 	util.DB.Create(&fileObj)
+}
+func GetFile(fileCode string) (FileObj, error) {
+	var fileObj FileObj
+	err := util.DB.Where("share_code=?", fileCode).First(&fileObj).Error
+	return fileObj, err
 }
