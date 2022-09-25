@@ -17,7 +17,7 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 	router.RegRouter(r)
 	c := cron.New()
-	c.AddFunc("@every 1m", model.DelFile)
+	c.AddFunc("@every 10m", model.DelFile)
 	c.Start()
 	r.Run(":" + viper.GetString("server.port"))
 }

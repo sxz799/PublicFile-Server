@@ -20,7 +20,7 @@ func upload(c *gin.Context) {
 		c.JSON(200, model.Result{
 			Code:    -1,
 			Success: false,
-			Message: fmt.Sprintf("'%s' 保存失败!", file.Filename),
+			Message: fmt.Sprintf("%s 保存失败!", file.Filename),
 		})
 		return
 	}
@@ -42,7 +42,7 @@ func upload(c *gin.Context) {
 		c.JSON(200, model.Result{
 			Code:    1,
 			Success: true,
-			Message: "文件已存在，提取码：" + shareCode,
+			Message: "文件：" + file.Filename + " 已存在，提取码：" + shareCode,
 		})
 		return
 	}
@@ -60,7 +60,7 @@ func upload(c *gin.Context) {
 	c.JSON(200, model.Result{
 		Code:    1,
 		Success: true,
-		Message: fmt.Sprintf("上传成功!提取码: %s ", code),
+		Message: "文件：" + file.Filename + " 上传成功!提取码：" + code,
 	})
 }
 
@@ -82,7 +82,7 @@ func download(c *gin.Context) {
 func exist(c *gin.Context) {
 	log.Println("remote IP : ", c.RemoteIP())
 	code := c.Query("code")
-	_, err := model.GetFile(code)
+	file, err := model.GetFile(code)
 	if err != nil {
 		c.JSON(200, model.Result{
 			Code:    1,
@@ -92,6 +92,7 @@ func exist(c *gin.Context) {
 		c.JSON(200, model.Result{
 			Code:    1,
 			Success: true,
+			FileObj: file,
 		})
 	}
 }
