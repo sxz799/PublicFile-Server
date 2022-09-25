@@ -2,6 +2,7 @@ package model
 
 import (
 	"PublicFileServer/util"
+	"os"
 	"time"
 )
 
@@ -41,8 +42,19 @@ func CreateFile(fileName, fileCode, fileMd5 string, fileSize int64) {
 	}
 	util.DB.Create(&fileObj)
 }
+
 func GetFile(fileCode string) (FileObj, error) {
 	var fileObj FileObj
 	err := util.DB.Where("share_code=?", fileCode).First(&fileObj).Error
 	return fileObj, err
+}
+
+func DelFile() {
+	var files []FileObj
+	util.DB.Where("upload_date < ?", time.Now().Add(-time.Second*90).Format("2006-01-02 15:04:05")).Find(&files)
+	for _, file := range files {
+		AddSystemLog("删除了文件："+file.FileName, "deleteFile")
+		util.DB.Delete(&file)
+		os.Remove("files/" + file.FileName)
+	}
 }

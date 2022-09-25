@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
+	"log"
 	"net/url"
 	"os"
 )
@@ -55,18 +56,21 @@ func upload(c *gin.Context) {
 		return
 	}
 	model.CreateFile(file.Filename, code, fileMd5, file.Size)
+	model.AddSystemLog("...上传了文件："+file.Filename, "upload")
 	c.JSON(200, model.Result{
 		Code:    1,
 		Success: true,
-		Message: fmt.Sprintf("文件 %s 上传成功!提取码:%s", file.Filename, code),
+		Message: fmt.Sprintf("上传成功!提取码: %s ", code),
 	})
 }
+
 func download(c *gin.Context) {
 	code := c.Query("code")
 	file, err := model.GetFile(code)
 	if err != nil {
 		return
 	} else {
+		model.AddSystemLog("...下载了文件："+file.FileName, "download")
 		c.Header("Content-Type", "application/octet-stream")
 		c.Header("Content-Disposition", "attachment; filename="+file.FileName)
 		c.Header("filename", url.QueryEscape(file.FileName))
@@ -74,7 +78,9 @@ func download(c *gin.Context) {
 		c.File("./files/" + file.FileName)
 	}
 }
+
 func exist(c *gin.Context) {
+	log.Println("remote IP : ", c.RemoteIP())
 	code := c.Query("code")
 	_, err := model.GetFile(code)
 	if err != nil {
