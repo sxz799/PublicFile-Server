@@ -8,51 +8,85 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
-	"log"
-	"net/http"
+	"net/url"
 	"os"
 )
 
 func upload(c *gin.Context) {
 	file, _ := c.FormFile("file")
-	log.Println(file.Filename)
 	err := c.SaveUploadedFile(file, "./files/"+file.Filename)
 	if err != nil {
-		c.String(http.StatusOK, fmt.Sprintf("'%s' upload fail!", file.Filename))
+		c.JSON(200, model.Result{
+			Code:    -1,
+			Success: false,
+			Message: fmt.Sprintf("'%s' 保存失败!", file.Filename),
+		})
 		return
 	}
 	pFile, err := os.Open("./files/" + file.Filename)
 	if err != nil {
-		c.String(http.StatusOK, fmt.Sprintf("打开文件失败：%s", err))
+		c.JSON(200, model.Result{
+			Code:    0,
+			Success: false,
+			Message: fmt.Sprintf("打开文件失败：%s", err),
+		})
 		return
 	}
 	defer pFile.Close()
 	md5h := md5.New()
 	io.Copy(md5h, pFile)
 	fileMd5 := hex.EncodeToString(md5h.Sum(nil))
-	exist, shareCode := model.FileExist(fileMd5)
-	if exist {
-		c.String(http.StatusOK, "文件已存在，提取码："+shareCode)
+	fileExist, shareCode := model.FileExist(file.Filename, fileMd5)
+	if fileExist {
+		c.JSON(200, model.Result{
+			Code:    1,
+			Success: true,
+			Message: "文件已存在，提取码：" + shareCode,
+		})
 		return
 	}
 	success, code := GenerateCode()
 	if !success {
-		c.String(http.StatusOK, "提取码生成失败,请重试！")
+		c.JSON(200, model.Result{
+			Code:    1,
+			Success: true,
+			Message: "提取码生成失败,请重试！",
+		})
 		return
 	}
 	model.CreateFile(file.Filename, code, fileMd5, file.Size)
-	c.String(http.StatusOK, fmt.Sprintf("'%s' 上传成功!提取码:%s", file.Filename, code))
+	c.JSON(200, model.Result{
+		Code:    1,
+		Success: true,
+		Message: fmt.Sprintf("文件 %s 上传成功!提取码:%s", file.Filename, code),
+	})
 }
 func download(c *gin.Context) {
 	code := c.Query("code")
 	file, err := model.GetFile(code)
 	if err != nil {
-		c.String(http.StatusOK, "提取码不存在!")
+		return
 	} else {
 		c.Header("Content-Type", "application/octet-stream")
 		c.Header("Content-Disposition", "attachment; filename="+file.FileName)
+		c.Header("filename", url.QueryEscape(file.FileName))
 		c.Header("Content-Transfer-Encoding", "binary")
 		c.File("./files/" + file.FileName)
+	}
+}
+func exist(c *gin.Context) {
+	code := c.Query("code")
+	_, err := model.GetFile(code)
+	if err != nil {
+		c.JSON(200, model.Result{
+			Code:    1,
+			Success: false,
+		})
+	} else {
+		c.JSON(200, model.Result{
+			Code:    1,
+			Success: true,
+		})
 	}
 }
 
@@ -60,6 +94,7 @@ func File(e *gin.Engine) {
 	g := e.Group("/file")
 	{
 		g.POST("/upload", upload)
+		g.GET("/exist", exist)
 		g.GET("/download", download)
 	}
 }

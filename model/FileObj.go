@@ -15,9 +15,9 @@ type FileObj struct {
 	FileLocation string `json:"fileLocation"`
 }
 
-func FileExist(fileName string) (bool, string) {
+func FileExist(fileName, fileMd5 string) (bool, string) {
 	var fileObj FileObj
-	util.DB.Where("file_md5=?", fileName).First(&fileObj)
+	util.DB.Where("file_md5=? and file_name=?", fileMd5, fileName).First(&fileObj)
 	if fileObj.FileSize > 0 {
 		return true, fileObj.ShareCode
 	} else {
@@ -35,7 +35,7 @@ func CreateFile(fileName, fileCode, fileMd5 string, fileSize int64) {
 		FileName:     fileName,
 		FileSize:     fileSize,
 		FileMd5:      fileMd5,
-		UploadDate:   time.Now().String(),
+		UploadDate:   time.Now().Format("2006-01-02 15:04:05"),
 		ShareCode:    fileCode,
 		FileLocation: "file/" + fileName,
 	}

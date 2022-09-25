@@ -3,6 +3,7 @@ package util
 import (
 	"math/rand"
 	"strings"
+	"time"
 )
 
 var CHARS = []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
@@ -18,6 +19,7 @@ func RandAllString(lenNum int) string {
 	str := strings.Builder{}
 	length := len(CHARS)
 	for i := 0; i < lenNum; i++ {
+		rand.Seed(time.Now().UnixNano())
 		l := CHARS[rand.Intn(length)]
 		str.WriteString(l)
 	}
@@ -33,6 +35,7 @@ func RandNumString(lenNum int) string {
 	str := strings.Builder{}
 	length := 10
 	for i := 0; i < lenNum; i++ {
+		rand.Seed(time.Now().UnixNano())
 		str.WriteString(CHARS[52+rand.Intn(length)])
 	}
 	return str.String()
@@ -47,6 +50,7 @@ func RandString(lenNum int) string {
 	str := strings.Builder{}
 	length := 52
 	for i := 0; i < lenNum; i++ {
+		rand.Seed(time.Now().UnixNano())
 		str.WriteString(CHARS[rand.Intn(length)])
 	}
 	return str.String()
