@@ -7,10 +7,12 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 	"io"
 	"log"
 	"net/url"
 	"os"
+	"strconv"
 )
 
 func upload(c *gin.Context) {
@@ -96,13 +98,21 @@ func exist(c *gin.Context) {
 		})
 	}
 }
-
+func config(c *gin.Context) {
+	fileLife, _ := strconv.Atoi(viper.GetString("config.fileLife"))
+	fileSize, _ := strconv.Atoi(viper.GetString("config.fileSize"))
+	c.JSON(200, gin.H{
+		"fileLife": fileLife,
+		"fileSize": fileSize,
+	})
+}
 func File(e *gin.Engine) {
 	g := e.Group("/file")
 	{
 		g.POST("/upload", upload)
 		g.GET("/exist", exist)
 		g.GET("/download", download)
+		g.GET("/config", config)
 	}
 }
 

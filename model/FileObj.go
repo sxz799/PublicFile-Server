@@ -2,7 +2,9 @@ package model
 
 import (
 	"PublicFileServer/util"
+	"github.com/spf13/viper"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -51,7 +53,8 @@ func GetFile(fileCode string) (FileObj, error) {
 
 func DelFile() {
 	var files []FileObj
-	util.DB.Where("upload_date < ?", time.Now().Add(-time.Hour*24).Format("2006-01-02 15:04:05")).Find(&files)
+	fileLife, _ := strconv.Atoi(viper.GetString("config.fileLife"))
+	util.DB.Where("upload_date < ?", time.Now().Add(-time.Hour*time.Duration(fileLife)).Format("2006-01-02 15:04:05")).Find(&files)
 	for _, file := range files {
 		AddSystemLog("删除了文件："+file.FileName, "deleteFile")
 		util.DB.Delete(&file)
