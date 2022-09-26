@@ -11,29 +11,18 @@ import (
 	"io"
 	"log"
 	"net/url"
-	"os"
 	"strconv"
 	"time"
 )
 
 func upload(c *gin.Context) {
 	file, _ := c.FormFile("file")
-	pathName := time.Now().Format("20060102150405")
-	err := c.SaveUploadedFile(file, "./files/"+pathName)
-	if err != nil {
-		c.JSON(200, model.Result{
-			Code:    -1,
-			Success: false,
-			Message: fmt.Sprintf("%s 保存失败!", file.Filename),
-		})
-		return
-	}
-	pFile, err := os.Open("./files/" + pathName)
+	pFile, err := file.Open()
 	if err != nil {
 		c.JSON(200, model.Result{
 			Code:    0,
 			Success: false,
-			Message: fmt.Sprintf("打开文件失败：%s", err),
+			Message: fmt.Sprintf("校验文件失败：%s", err),
 		})
 		return
 	}
@@ -41,6 +30,7 @@ func upload(c *gin.Context) {
 	md5h := md5.New()
 	io.Copy(md5h, pFile)
 	fileMd5 := hex.EncodeToString(md5h.Sum(nil))
+	pathName := time.Now().Format("20060102150405")
 	fileExist, shareCode := model.FileExist(file.Filename, fileMd5)
 	if fileExist {
 		c.JSON(200, model.Result{
@@ -49,6 +39,16 @@ func upload(c *gin.Context) {
 			Message: "文件：" + file.Filename + " 已存在，提取码：" + shareCode,
 		})
 		return
+	} else {
+		err2 := c.SaveUploadedFile(file, "./files/"+pathName)
+		if err2 != nil {
+			c.JSON(200, model.Result{
+				Code:    -1,
+				Success: false,
+				Message: fmt.Sprintf("%s 保存失败!", file.Filename),
+			})
+			return
+		}
 	}
 	success, code := GenerateCode()
 	if !success {
