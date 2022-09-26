@@ -10,6 +10,10 @@ var CHARS = []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
 	"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
 	"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"}
 
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
 /*
 RandAllString  生成随机字符串([a~zA~Z0~9])
 
@@ -19,7 +23,6 @@ func RandAllString(lenNum int) string {
 	str := strings.Builder{}
 	length := len(CHARS)
 	for i := 0; i < lenNum; i++ {
-		rand.Seed(time.Now().UnixNano())
 		l := CHARS[rand.Intn(length)]
 		str.WriteString(l)
 	}
@@ -35,7 +38,6 @@ func RandNumString(lenNum int) string {
 	str := strings.Builder{}
 	length := 10
 	for i := 0; i < lenNum; i++ {
-		rand.Seed(time.Now().UnixNano())
 		str.WriteString(CHARS[52+rand.Intn(length)])
 	}
 	return str.String()
@@ -50,7 +52,6 @@ func RandString(lenNum int) string {
 	str := strings.Builder{}
 	length := 52
 	for i := 0; i < lenNum; i++ {
-		rand.Seed(time.Now().UnixNano())
 		str.WriteString(CHARS[rand.Intn(length)])
 	}
 	return str.String()

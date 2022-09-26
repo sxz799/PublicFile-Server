@@ -11,6 +11,7 @@ import (
 type FileObj struct {
 	Id           int    `json:"id" gorm:"autoIncrement"`
 	FileName     string `json:"fileName"`
+	PathName     string `json:"pathName"`
 	FileSize     int64  `json:"fileSize"`
 	FileMd5      string `json:"fileMd5"`
 	UploadDate   string `json:"uploadDate"`
@@ -33,14 +34,15 @@ func CodeExist(code string) bool {
 	return util.DB.Where("share_code=?", code).First(&fileObj) == nil
 }
 
-func CreateFile(fileName, fileCode, fileMd5 string, fileSize int64) {
+func CreateFile(fileName, fileCode, fileMd5, pathName string, fileSize int64) {
 	fileObj := FileObj{
 		FileName:     fileName,
+		PathName:     pathName,
 		FileSize:     fileSize,
 		FileMd5:      fileMd5,
 		UploadDate:   time.Now().Format("2006-01-02 15:04:05"),
 		ShareCode:    fileCode,
-		FileLocation: "file/" + fileName,
+		FileLocation: "file/" + pathName,
 	}
 	util.DB.Create(&fileObj)
 }

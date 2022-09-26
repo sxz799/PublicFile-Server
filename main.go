@@ -14,7 +14,7 @@ func main() {
 	model.InitAutoMigrateDB()
 	r := gin.Default()
 	//r.Use(router.Cors())
-	gin.SetMode(gin.ReleaseMode)
+	//gin.SetMode(gin.ReleaseMode)
 	router.RegRouter(r)
 	c := cron.New()
 	c.AddFunc("@every 10m", model.DelFile)

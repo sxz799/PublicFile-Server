@@ -13,11 +13,13 @@ import (
 	"net/url"
 	"os"
 	"strconv"
+	"time"
 )
 
 func upload(c *gin.Context) {
 	file, _ := c.FormFile("file")
-	err := c.SaveUploadedFile(file, "./files/"+file.Filename)
+	pathName := time.Now().Format("20060102150405")
+	err := c.SaveUploadedFile(file, "./files/"+pathName)
 	if err != nil {
 		c.JSON(200, model.Result{
 			Code:    -1,
@@ -26,7 +28,7 @@ func upload(c *gin.Context) {
 		})
 		return
 	}
-	pFile, err := os.Open("./files/" + file.Filename)
+	pFile, err := os.Open("./files/" + pathName)
 	if err != nil {
 		c.JSON(200, model.Result{
 			Code:    0,
@@ -57,7 +59,7 @@ func upload(c *gin.Context) {
 		})
 		return
 	}
-	model.CreateFile(file.Filename, code, fileMd5, file.Size)
+	model.CreateFile(file.Filename, code, fileMd5, pathName, file.Size)
 	model.AddSystemLog("...上传了文件："+file.Filename, "upload")
 	c.JSON(200, model.Result{
 		Code:    1,
@@ -77,7 +79,7 @@ func download(c *gin.Context) {
 		c.Header("Content-Disposition", "attachment; filename="+file.FileName)
 		c.Header("filename", url.QueryEscape(file.FileName))
 		c.Header("Content-Transfer-Encoding", "binary")
-		c.File("./files/" + file.FileName)
+		c.File("./files/" + file.PathName)
 	}
 }
 
@@ -117,14 +119,14 @@ func File(e *gin.Engine) {
 }
 
 func GenerateCode() (bool, string) {
-	time := 0
+	t := 0
 	for {
-		if time > 100 {
+		if t > 100 {
 			return false, ""
 		}
 		code := util.RandAllString(6)
 		if model.CodeExist(code) {
-			time++
+			t++
 			continue
 		} else {
 			return true, code
