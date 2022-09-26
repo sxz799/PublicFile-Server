@@ -30,7 +30,7 @@ func upload(c *gin.Context) {
 	md5h := md5.New()
 	io.Copy(md5h, pFile)
 	fileMd5 := hex.EncodeToString(md5h.Sum(nil))
-	pathName := time.Now().Format("20060102150405")
+	pathName := time.Now().Format("20060102150405") + "_" + file.Filename
 	fileExist, shareCode := model.FileExist(file.Filename, fileMd5)
 	if fileExist {
 		c.JSON(200, model.Result{
