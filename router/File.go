@@ -9,7 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"io"
-	"log"
 	"net/url"
 	"strconv"
 	"time"
@@ -84,7 +83,6 @@ func download(c *gin.Context) {
 }
 
 func exist(c *gin.Context) {
-	log.Println("remote IP : ", c.RemoteIP())
 	code := c.Param("code")
 	file, err := model.GetFile(code)
 	if err != nil {

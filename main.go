@@ -14,7 +14,14 @@ func main() {
 	model.InitAutoMigrateDB()
 	r := gin.Default()
 	//r.Use(router.Cors())
-	//gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
+	if viper.GetBool("server.frontMode") {
+		r.LoadHTMLGlob("static/index.html")
+		r.Static("/static", "static")
+		r.GET("/", func(context *gin.Context) {
+			context.HTML(200, "index.html", "")
+		})
+	}
 	router.RegRouter(r)
 	c := cron.New()
 	c.AddFunc("@every 10m", model.DelFile)

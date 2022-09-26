@@ -6,6 +6,7 @@ db :
   database: publicFiles
 server :
   port : 9091
+  frontMode : false
 
 config :
   fileLife : 24 # 文件有效期 单位: 小时
