@@ -69,7 +69,7 @@ func upload(c *gin.Context) {
 }
 
 func download(c *gin.Context) {
-	code := c.Query("code")
+	code := c.Param("code")
 	file, err := model.GetFile(code)
 	if err != nil {
 		return
@@ -85,7 +85,7 @@ func download(c *gin.Context) {
 
 func exist(c *gin.Context) {
 	log.Println("remote IP : ", c.RemoteIP())
-	code := c.Query("code")
+	code := c.Param("code")
 	file, err := model.GetFile(code)
 	if err != nil {
 		c.JSON(200, model.Result{
@@ -112,8 +112,8 @@ func File(e *gin.Engine) {
 	g := e.Group("/file")
 	{
 		g.POST("/upload", upload)
-		g.GET("/exist", exist)
-		g.GET("/download", download)
+		g.GET("/exist/:code", exist)
+		g.GET("/download/:code", download)
 		g.GET("/config", config)
 	}
 }

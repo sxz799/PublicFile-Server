@@ -8,5 +8,5 @@ server :
   port : 9091
 
 config :
-  fileLife : 14 # 文件有效期 单位: 小时
-  fileSize : 1 # 文件大小限制 单位: MB
+  fileLife : 24 # 文件有效期 单位: 小时
+  fileSize : 10 # 文件大小限制 单位: MB
