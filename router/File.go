@@ -20,7 +20,7 @@ func upload(c *gin.Context) {
 	pFile, err := file.Open()
 	if err != nil {
 		c.JSON(200, model.Result{
-			Code:    0,
+			Status:  "error",
 			Success: false,
 			Message: fmt.Sprintf("校验文件失败：%s", err),
 		})
@@ -34,7 +34,7 @@ func upload(c *gin.Context) {
 	fileExist, shareCode := model.FileExist(file.Filename, fileMd5)
 	if fileExist {
 		c.JSON(200, model.Result{
-			Code:    1,
+			Status:  "info",
 			Success: true,
 			Message: "文件：" + file.Filename + " 已存在，提取码：" + shareCode,
 		})
@@ -43,7 +43,7 @@ func upload(c *gin.Context) {
 		err2 := c.SaveUploadedFile(file, "./files/"+pathName)
 		if err2 != nil {
 			c.JSON(200, model.Result{
-				Code:    -1,
+				Status:  "error",
 				Success: false,
 				Message: fmt.Sprintf("%s 保存失败!", file.Filename),
 			})
@@ -53,7 +53,7 @@ func upload(c *gin.Context) {
 	success, code := GenerateCode()
 	if !success {
 		c.JSON(200, model.Result{
-			Code:    1,
+			Status:  "error",
 			Success: true,
 			Message: "提取码生成失败,请重试！",
 		})
@@ -62,7 +62,7 @@ func upload(c *gin.Context) {
 	model.CreateFile(file.Filename, code, fileMd5, pathName, file.Size)
 	model.AddSystemLog("...上传了文件："+file.Filename, "upload")
 	c.JSON(200, model.Result{
-		Code:    1,
+		Status:  "success",
 		Success: true,
 		Message: "文件：" + file.Filename + " 上传成功!提取码：" + code,
 	})
@@ -89,12 +89,12 @@ func exist(c *gin.Context) {
 	file, err := model.GetFile(code)
 	if err != nil {
 		c.JSON(200, model.Result{
-			Code:    1,
+			Status:  "error",
 			Success: false,
 		})
 	} else {
 		c.JSON(200, model.Result{
-			Code:    1,
+			Status:  "success",
 			Success: true,
 			FileObj: file,
 		})
