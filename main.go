@@ -4,6 +4,7 @@ import (
 	"PublicFileServer/model"
 	"PublicFileServer/router"
 	"PublicFileServer/util"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/robfig/cron"
 	"github.com/spf13/viper"
@@ -16,6 +17,7 @@ func main() {
 	//r.Use(router.Cors())
 	gin.SetMode(gin.ReleaseMode)
 	if viper.GetBool("server.frontMode") {
+		fmt.Println("已开启前后端整合模式！")
 		r.LoadHTMLGlob("static/index.html")
 		r.Static("/static", "static")
 		r.GET("/", func(context *gin.Context) {
