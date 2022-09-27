@@ -8,13 +8,29 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/robfig/cron"
 	"github.com/spf13/viper"
+	"log"
+	"os"
 )
 
-func main() {
+func init() {
+	viper.SetConfigName("conf")
+	viper.SetConfigType("yml")
+	viper.AddConfigPath("conf")
+	err := viper.ReadInConfig()
+	if err != nil {
+		log.Panicln("viper load fail ...")
+		return
+	}
 	util.InitDB()
 	model.InitAutoMigrateDB()
+	_, err2 := os.Stat("files")
+	if err2 != nil && os.IsNotExist(err2) {
+		os.Mkdir("files", os.ModePerm)
+	}
+}
+
+func main() {
 	r := gin.Default()
-	//r.Use(router.Cors())
 	gin.SetMode(gin.ReleaseMode)
 	if viper.GetBool("server.frontMode") {
 		fmt.Println("已开启前后端整合模式！")

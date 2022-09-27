@@ -10,16 +10,6 @@ import (
 
 var DB *gorm.DB
 
-func init() {
-	viper.SetConfigName("conf")
-	viper.SetConfigType("yml")
-	viper.AddConfigPath("conf")
-	err := viper.ReadInConfig()
-	if err != nil {
-		log.Println("viper load fail ...")
-		return
-	}
-}
 func InitDB() {
 	sqlType := viper.GetString("db.sqlType")
 	database := viper.GetString("db.database")
