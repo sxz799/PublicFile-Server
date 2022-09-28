@@ -15,9 +15,9 @@ func init() {
 }
 
 /*
-RandAllString  生成指定长度随机字符串([a-zA-Z0-9])
+RandStringAll  生成指定长度随机字符串([a-zA-Z0-9])
 */
-func RandAllString(lenNum int) string {
+func RandStringAll(lenNum int) string {
 	str := strings.Builder{}
 	chars := append(append(LARGE_CHARS, SMALL_CHARS...), NUM_CHARS...)
 	length := len(chars)
@@ -29,9 +29,33 @@ func RandAllString(lenNum int) string {
 }
 
 /*
-RandNumString  生成指定长度随机字符串([0-9])
+RandStringSmall  生成指定长度随机字符串([a-z])
 */
-func RandNumString(lenNum int) string {
+func RandStringSmall(lenNum int) string {
+	str := strings.Builder{}
+	length := len(SMALL_CHARS)
+	for i := 0; i < lenNum; i++ {
+		str.WriteString(SMALL_CHARS[rand.Intn(length)])
+	}
+	return str.String()
+}
+
+/*
+RandStringLarge  生成指定长度随机字符串([A-Z])
+*/
+func RandStringLarge(lenNum int) string {
+	str := strings.Builder{}
+	length := len(LARGE_CHARS)
+	for i := 0; i < lenNum; i++ {
+		str.WriteString(LARGE_CHARS[rand.Intn(length)])
+	}
+	return str.String()
+}
+
+/*
+RandStringNum  生成指定长度随机字符串([0-9])
+*/
+func RandStringNum(lenNum int) string {
 	str := strings.Builder{}
 	length := len(NUM_CHARS)
 	for i := 0; i < lenNum; i++ {
@@ -42,9 +66,9 @@ func RandNumString(lenNum int) string {
 }
 
 /*
-RandString  生成指定长度随机字符串([a-zA-Z])
+RandStringLargeSmall  生成指定长度随机字符串([a-zA-Z])
 */
-func RandString(lenNum int) string {
+func RandStringLargeSmall(lenNum int) string {
 	str := strings.Builder{}
 	chars := append(LARGE_CHARS, SMALL_CHARS...)
 	length := len(chars)
@@ -56,25 +80,29 @@ func RandString(lenNum int) string {
 }
 
 /*
-RandSmallString  生成指定长度随机字符串([a-z])
+RandStringLargeNum  生成指定长度随机字符串([A-Z0-9])
 */
-func RandSmallString(lenNum int) string {
+func RandStringLargeNum(lenNum int) string {
 	str := strings.Builder{}
-	length := len(SMALL_CHARS)
+	chars := append(LARGE_CHARS, NUM_CHARS...)
+	length := len(chars)
 	for i := 0; i < lenNum; i++ {
-		str.WriteString(SMALL_CHARS[rand.Intn(length)])
+		l := chars[rand.Intn(length)]
+		str.WriteString(l)
 	}
 	return str.String()
 }
 
 /*
-RandLargeString  生成指定长度随机字符串([A-Z])
+RandStringSmallNum  生成指定长度随机字符串([a-z0-9])
 */
-func RandLargeString(lenNum int) string {
+func RandStringSmallNum(lenNum int) string {
 	str := strings.Builder{}
-	length := len(LARGE_CHARS)
+	chars := append(NUM_CHARS, SMALL_CHARS...)
+	length := len(chars)
 	for i := 0; i < lenNum; i++ {
-		str.WriteString(LARGE_CHARS[rand.Intn(length)])
+		l := chars[rand.Intn(length)]
+		str.WriteString(l)
 	}
 	return str.String()
 }

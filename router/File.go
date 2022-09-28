@@ -1,16 +1,16 @@
 package router
 
 import (
+	"PublicFileServer/gobalConfig"
 	"PublicFileServer/model"
 	"PublicFileServer/util"
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 	"io"
+	"log"
 	"net/url"
-	"strconv"
 	"time"
 )
 
@@ -35,7 +35,7 @@ func upload(c *gin.Context) {
 		c.JSON(200, model.Result{
 			Status:  "info",
 			Success: true,
-			Message: "文件：" + file.Filename + " 已存在，提取码：" + shareCode,
+			Message: "文件已存在，提取码：" + shareCode,
 		})
 		return
 	} else {
@@ -63,7 +63,7 @@ func upload(c *gin.Context) {
 	c.JSON(200, model.Result{
 		Status:  "success",
 		Success: true,
-		Message: "文件：" + file.Filename + " 上传成功!提取码：" + code,
+		Message: "文件上传成功!提取码：" + code,
 	})
 }
 
@@ -99,11 +99,10 @@ func exist(c *gin.Context) {
 	}
 }
 func config(c *gin.Context) {
-	fileLife, _ := strconv.Atoi(viper.GetString("config.fileLife"))
-	fileSize, _ := strconv.Atoi(viper.GetString("config.fileSize"))
+	log.Println(gobalConfig.FileLife, gobalConfig.FileSize)
 	c.JSON(200, gin.H{
-		"fileLife": fileLife,
-		"fileSize": fileSize,
+		"fileLife": gobalConfig.FileLife,
+		"fileSize": gobalConfig.FileSize,
 	})
 }
 func File(e *gin.Engine) {
@@ -122,7 +121,27 @@ func GenerateCode() (bool, string) {
 		if t > 100 {
 			return false, ""
 		}
-		code := util.RandAllString(6)
+		codeLength := gobalConfig.ShareCodeLength
+		var code string
+		switch gobalConfig.ShareCodeType {
+		case 1:
+			code = util.RandStringAll(codeLength)
+		case 2:
+			code = util.RandStringLarge(codeLength)
+		case 3:
+			code = util.RandStringSmall(codeLength)
+		case 4:
+			code = util.RandStringNum(codeLength)
+		case 5:
+			code = util.RandStringLargeSmall(codeLength)
+		case 6:
+			code = util.RandStringLargeNum(codeLength)
+		case 7:
+			code = util.RandStringSmallNum(codeLength)
+		default:
+			code = util.RandStringAll(codeLength)
+		}
+
 		if model.CodeExist(code) {
 			t++
 			continue
