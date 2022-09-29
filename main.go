@@ -5,7 +5,6 @@ import (
 	"PublicFileServer/model"
 	"PublicFileServer/router"
 	"PublicFileServer/util"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/robfig/cron"
 	"log"
@@ -16,10 +15,10 @@ func main() {
 	util.InitDB()
 	log.Println("正在检查表结构...")
 	model.InitAutoMigrateDB()
-	r := gin.Default()
 	gin.SetMode(gobalConfig.GinMode)
+	r := gin.Default()
 	if gobalConfig.FrontMode {
-		fmt.Println("已开启前后端整合模式！")
+		log.Println("已开启前后端整合模式！")
 		r.LoadHTMLGlob("static/index.html")
 		r.Static("/static", "static")
 		r.GET("/", func(context *gin.Context) {
@@ -30,5 +29,6 @@ func main() {
 	c := cron.New()
 	c.AddFunc("@every 10m", model.DelFile)
 	c.Start()
+	log.Println("定时任务启动成功,服务启动成功,当前使用端口：", gobalConfig.ServerPort)
 	r.Run(":" + gobalConfig.ServerPort)
 }

@@ -6,8 +6,8 @@ db :
   port : 3306
   host : 127.0.0.1
 server :
-  port : 9091
-  ginMode : debug # debug || release || test
+  port : 7990
+  ginMode : release # debug || release || test
 config :
   frontMode : false # 前段整合模式 即前端文件放到static目录下省去nginx服务器
   fileLife : 24 # 文件有效期 单位: 小时

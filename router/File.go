@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
-	"log"
 	"net/url"
 	"time"
 )
@@ -99,7 +98,6 @@ func exist(c *gin.Context) {
 	}
 }
 func config(c *gin.Context) {
-	log.Println(gobalConfig.FileLife, gobalConfig.FileSize)
 	c.JSON(200, gin.H{
 		"fileLife": gobalConfig.FileLife,
 		"fileSize": gobalConfig.FileSize,
