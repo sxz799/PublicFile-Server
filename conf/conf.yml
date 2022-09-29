@@ -1,5 +1,5 @@
 db :
-  sqlType : sqlite  # 支持mysql 和 sqlite
+  sqlType : sqlite  # mysql || sqlite
   database: publicFiles
   username : root
   password : 123456
@@ -7,15 +7,15 @@ db :
   host : 127.0.0.1
 server :
   port : 9091
-
+  ginMode : debug # debug || release || test
 config :
-  frontMode : false
+  frontMode : false # 前段整合模式 即前端文件放到static目录下省去nginx服务器
   fileLife : 24 # 文件有效期 单位: 小时
   fileSize : 30 # 文件大小限制 单位: MB
   shareCodeType : 4 # 提取码类型
   shareCodeLength : 8 # 提取码长度
 
-### shareCodeType
+### shareCodeType 提取码生成规则如下
 # 1 : [a-zA-Z0-9]
 # 2 : [A-Z]
 # 3 : [a-z]

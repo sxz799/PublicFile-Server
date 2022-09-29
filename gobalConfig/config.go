@@ -13,6 +13,7 @@ var (
 	ShareCodeLength int
 	ServerPort      string
 	FrontMode       bool
+	GinMode         string
 )
 
 func init() {
@@ -35,7 +36,7 @@ func init() {
 	}
 
 	ServerPort = viper.GetString("server.port")
-
+	GinMode = viper.GetString("server.ginMode")
 	FileLife = viper.GetInt("config.fileLife")
 	FileSize = viper.GetInt("config.fileSize")
 	ShareCodeType = viper.GetInt("config.shareCodeType")

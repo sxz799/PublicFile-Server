@@ -17,7 +17,7 @@ func main() {
 	log.Println("正在检查表结构...")
 	model.InitAutoMigrateDB()
 	r := gin.Default()
-	//gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gobalConfig.GinMode)
 	if gobalConfig.FrontMode {
 		fmt.Println("已开启前后端整合模式！")
 		r.LoadHTMLGlob("static/index.html")
