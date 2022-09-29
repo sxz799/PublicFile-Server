@@ -1,6 +1,6 @@
 db :
   sqlType : sqlite  # mysql || sqlite
-  database: publicFiles
+  database: public_files
   username : root
   password : 123456
   port : 3306
@@ -11,7 +11,7 @@ server :
 config :
   frontMode : false # 前段整合模式 即前端文件放到static目录下省去nginx服务器
   fileLife : 24 # 文件有效期 单位: 小时
-  fileSize : 30 # 文件大小限制 单位: MB
+  fileSize : 100 # 文件大小限制 单位: MB
   shareCodeType : 4 # 提取码类型
   shareCodeLength : 8 # 提取码长度
 
