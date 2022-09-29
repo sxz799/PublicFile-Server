@@ -1,6 +1,6 @@
 # PublicFileServer
 
-使用 gin 实现剪切板服务后端
+使用 gin 实现临时文件共享服务后端
 
 ## 前端仓库
 
@@ -9,7 +9,7 @@
 ## 编译命令
 
 #### mac/linux
-`go build -ldflags="-s -w" -o PublicFileServer main.go`
+`go build -ldflags="-s -w" -o fileServer main.go`
 
 #### windows
-`go build -ldflags="-s -w" -o PublicFileServer.exe main.go`
+`go build -ldflags="-s -w" -o fileServer.exe main.go`
