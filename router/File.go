@@ -59,7 +59,7 @@ func upload(c *gin.Context) {
 		return
 	}
 	model.CreateFile(file.Filename, code, fileMd5, pathName, file.Size)
-	model.AddSystemLog("...上传了文件："+file.Filename, "upload")
+	model.AddSystemLog(c.RemoteIP()+"...上传了文件："+file.Filename, "upload")
 	c.JSON(200, model.Result{
 		Status:  "success",
 		Success: true,
@@ -72,9 +72,9 @@ func download(c *gin.Context) {
 	code := c.Param("code")
 	file, err := model.GetFile(code)
 	if err != nil {
-		return
+		c.String(200, "提取码不存在或文件已过期！")
 	} else {
-		model.AddSystemLog("...下载了文件："+file.FileName, "download")
+		model.AddSystemLog(c.RemoteIP()+"...下载了文件："+file.FileName, "download")
 		c.Header("Content-Type", "application/octet-stream")
 		c.Header("Content-Disposition", "attachment; filename="+file.FileName)
 		c.Header("filename", url.QueryEscape(file.FileName))
@@ -90,6 +90,7 @@ func exist(c *gin.Context) {
 		c.JSON(200, model.Result{
 			Status:  "error",
 			Success: false,
+			Message: "提取码不存在或文件已过期！",
 		})
 	} else {
 		c.JSON(200, model.Result{
@@ -105,6 +106,7 @@ func config(c *gin.Context) {
 		"fileSize": gobalConfig.FileSize,
 	})
 }
+
 func File(e *gin.Engine) {
 	g := e.Group("/file")
 	{
