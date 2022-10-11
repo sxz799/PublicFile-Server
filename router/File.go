@@ -35,7 +35,7 @@ func upload(c *gin.Context) {
 			Status:  "info",
 			Success: true,
 			FileObj: model.FileObj{ShareCode: shareCode},
-			Message: "文件已存在，提取码：" + shareCode,
+			Message: "文件已存在！",
 		})
 		return
 	} else {
@@ -64,7 +64,7 @@ func upload(c *gin.Context) {
 		Status:  "success",
 		Success: true,
 		FileObj: model.FileObj{ShareCode: code},
-		Message: "文件上传成功!提取码：" + code,
+		Message: "文件上传成功！",
 	})
 }
 
