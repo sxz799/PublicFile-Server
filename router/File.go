@@ -34,9 +34,7 @@ func upload(c *gin.Context) {
 		c.JSON(200, model.Result{
 			Status:  "info",
 			Success: true,
-			FileObj：model.FileObj{
-				ShareCode: shareCode,
-			},
+			FileObj: model.FileObj{ShareCode: shareCode},
 			Message: "文件已存在，提取码：" + shareCode,
 		})
 		return
@@ -65,9 +63,7 @@ func upload(c *gin.Context) {
 	c.JSON(200, model.Result{
 		Status:  "success",
 		Success: true,
-		FileObj：model.FileObj{
-			ShareCode: code,
-		},
+		FileObj: model.FileObj{ShareCode: code},
 		Message: "文件上传成功!提取码：" + code,
 	})
 }
