@@ -57,8 +57,8 @@ func DelFile() {
 
 	util.DB.Where("upload_date < ?", time.Now().Add(-time.Hour*time.Duration(gobalConfig.FileLife)).Format("2006-01-02 15:04:05")).Find(&files)
 	for _, file := range files {
-		AddSystemLog("删除了文件："+file.FileName, "deleteFile")
+		AddSystemLog("删除了文件："+file.PathName, "deleteFile")
 		util.DB.Delete(&file)
-		os.Remove("files/" + file.FileName)
+		os.Remove("files/" + file.PathName)
 	}
 }
