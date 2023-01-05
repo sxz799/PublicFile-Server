@@ -7,8 +7,8 @@ import (
 )
 
 var (
-	FileLife        int
-	FileSize        int
+	LimitFileLife   int
+	LimitFileSize   int
 	ShareCodeType   int
 	ShareCodeLength int
 	ServerPort      string
@@ -37,8 +37,8 @@ func init() {
 
 	ServerPort = viper.GetString("server.port")
 	GinMode = viper.GetString("server.ginMode")
-	FileLife = viper.GetInt("config.fileLife")
-	FileSize = viper.GetInt("config.fileSize")
+	LimitFileLife = viper.GetInt("config.limitFileLife")
+	LimitFileSize = viper.GetInt("config.limitFileSize")
 	ShareCodeType = viper.GetInt("config.shareCodeType")
 	ShareCodeLength = viper.GetInt("config.shareCodeLength")
 	FrontMode = viper.GetBool("config.frontMode")

@@ -10,8 +10,8 @@ server :
   ginMode : release # debug || release || test
 config :
   frontMode : false # 前段整合模式 即前端文件放到static目录下省去nginx服务器
-  fileLife : 24 # 文件有效期 单位: 小时
-  fileSize : 100 # 文件大小限制 单位: MB
+  limitFileLife : 24 # 文件有效期 单位: 小时
+  limitFileSize : 100 # 文件大小限制 单位: MB
   shareCodeType : 4 # 提取码类型
   shareCodeLength : 8 # 提取码长度
 

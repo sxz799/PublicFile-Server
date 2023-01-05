@@ -102,8 +102,8 @@ func exist(c *gin.Context) {
 }
 func config(c *gin.Context) {
 	c.JSON(200, gin.H{
-		"fileLife": gobalConfig.FileLife,
-		"fileSize": gobalConfig.FileSize,
+		"limitFileLife": gobalConfig.LimitFileLife,
+		"limitFileSize": gobalConfig.LimitFileSize,
 	})
 }
 
