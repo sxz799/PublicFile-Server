@@ -30,6 +30,9 @@ func main() {
 	c := cron.New()
 	c.AddFunc("@every 10m", model.DelFile)
 	c.Start()
-	log.Println("定时任务启动成功,服务启动成功,后台地址为：", util.GetLocalIP()+":"+gobalConfig.ServerPort)
+	log.Println("定时任务启动成功,服务启动成功!")
+	localIP, publicIP := util.GetIPs()
+	log.Println("本地地址:", "http://"+localIP+":"+gobalConfig.ServerPort)
+	log.Println("公网地址:", "http://"+publicIP+":"+gobalConfig.ServerPort)
 	r.Run(":" + gobalConfig.ServerPort)
 }
