@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+
 	log.Println("正在连接数据库...")
 	util.InitDB()
 	log.Println("正在检查表结构...")
@@ -29,6 +30,6 @@ func main() {
 	c := cron.New()
 	c.AddFunc("@every 10m", model.DelFile)
 	c.Start()
-	log.Println("定时任务启动成功,服务启动成功,当前使用端口：", gobalConfig.ServerPort)
+	log.Println("定时任务启动成功,服务启动成功,后台地址为：", util.GetLocalIP()+":"+gobalConfig.ServerPort)
 	r.Run(":" + gobalConfig.ServerPort)
 }

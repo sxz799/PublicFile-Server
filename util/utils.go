@@ -6,6 +6,7 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"log"
+	"net"
 )
 
 var DB *gorm.DB
@@ -33,4 +34,37 @@ func InitDB() {
 		}
 	}
 
+}
+
+func GetLocalIP() string {
+	interfaces, _ := net.Interfaces()
+	for _, iface := range interfaces {
+		if iface.Flags&net.FlagUp == 0 {
+			continue // interface down
+		}
+		if iface.Flags&net.FlagLoopback != 0 {
+			continue // loopback interface
+		}
+		addrs, err := iface.Addrs()
+		if err != nil {
+			continue
+		}
+		for _, addr := range addrs {
+			var ip net.IP
+			switch v := addr.(type) {
+			case *net.IPNet:
+				ip = v.IP
+			case *net.IPAddr:
+				ip = v.IP
+			}
+			if ip == nil || ip.IsLoopback() {
+				continue
+			}
+			ipStr := ip.To4().String()
+			if len(ipStr) >= 7 && len(ipStr) <= 15 {
+				return ipStr
+			}
+		}
+	}
+	return "127.0.0.1"
 }
